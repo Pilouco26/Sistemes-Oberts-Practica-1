@@ -14,6 +14,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import model.entities.Game;
@@ -34,13 +35,11 @@ public class GameService extends AbstractFacade<Game> {
         return em;
     }
 
-    
-   @GET
-    @Secured
-    @Path(" /rest/api/v1/game?type=${type}&console=${console}")
+    @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response getAllGamesSortedByName() {
-        List<Game> games = em.createNativeQuery("Select * FROM Game", Game.class).getResultList();
-        return Response.ok(games).build();
+    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") String console) {
+
+        return this.findAll();
     }
+
 }

@@ -34,4 +34,6 @@ public class RentalService extends AbstractFacade<Rental> {
     }
     
     
+    
+    
 }
