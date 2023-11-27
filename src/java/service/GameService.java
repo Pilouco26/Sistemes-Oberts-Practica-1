@@ -76,8 +76,8 @@ public class GameService extends AbstractFacade<Game> {
     }
 
     @POST
-    @Override
-    public void create(Game entity) {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response crear(Game entity) {
         Game game = new Game();
         game.setName("Example Game");
         game.setType("Action");
@@ -85,6 +85,8 @@ public class GameService extends AbstractFacade<Game> {
         game.setStock(10);
         game.setPathImage("/path/to/image");
         super.create(game);
+        
+        return Response.status(Response.Status.CREATED).build();
     }
 
 }

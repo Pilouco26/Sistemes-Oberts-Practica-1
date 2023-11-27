@@ -17,9 +17,10 @@ import java.util.List;
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
-    @SequenceGenerator(name="Game_Gen", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Game_Gen") 
+    @SequenceGenerator(name = "Game_Gen", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Game_Gen")
     private Long id;
 
     @Column(name = "name")
@@ -36,8 +37,54 @@ public class Game implements Serializable {
 
     @Column(name = "pathImage")
     private String pathImage;
-    
-    
 
-    // getters and setters
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getConsole() {
+        return console;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setConsole(String console) {
+        this.console = console;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
 }
