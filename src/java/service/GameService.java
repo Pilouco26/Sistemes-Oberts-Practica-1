@@ -41,14 +41,13 @@ public class GameService extends AbstractFacade<Game> {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/prova")
-    @Override
-    public List<Game> findAll() {
-
-        return this.findAll();
+    public List<Game> findAlla() {
+      return findAll();
     }
+
     @GET
-    @Path("?type=${type}&console=${console}")
-    public List<Game> findAllOrderedByNameA(@QueryParam("type") String type, @QueryParam("console") String console) {
+    @Path("")
+    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") String console) {
         String queryString;
         Query query;
         if (type == null) {
@@ -79,7 +78,13 @@ public class GameService extends AbstractFacade<Game> {
     @POST
     @Override
     public void create(Game entity) {
-        super.create(entity);
+        Game game = new Game();
+        game.setName("Example Game");
+        game.setType("Action");
+        game.setConsole("PlayStation");
+        game.setStock(10);
+        game.setPathImage("/path/to/image");
+        super.create(game);
     }
 
 }
