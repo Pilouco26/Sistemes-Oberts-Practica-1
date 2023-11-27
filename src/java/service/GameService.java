@@ -14,9 +14,12 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
+import model.entities.Comment;
 import model.entities.Game;
 
 @Stateless
@@ -37,9 +40,46 @@ public class GameService extends AbstractFacade<Game> {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") String console) {
+    @Path("/prova")
+    @Override
+    public List<Game> findAll() {
 
         return this.findAll();
+    }
+    @GET
+    @Path("?type=${type}&console=${console}")
+    public List<Game> findAllOrderedByNameA(@QueryParam("type") String type, @QueryParam("console") String console) {
+        String queryString;
+        Query query;
+        if (type == null) {
+
+            queryString = "SELECT g FROM Game g WHERE g.type = :type AND g.console = :console ORDER BY g.name ASC";
+            query = em.createQuery(queryString, Game.class);
+            query.setParameter(
+                    "type", type);
+
+        } else if (console == null) {
+            queryString = "SELECT g FROM Game g WHERE g.console = :console ORDER BY g.name ASC";
+            query = em.createQuery(queryString, Game.class);
+            query.setParameter(
+                    "console", console);
+
+        } else {
+            queryString = "SELECT g FROM Game g WHERE g.type = :type AND g.console = :console ORDER BY g.name ASC";
+            query = em.createQuery(queryString, Game.class);
+            query.setParameter(
+                    "type", type);
+            query.setParameter(
+                    "console", console);
+
+        }
+        return query.getResultList();
+    }
+
+    @POST
+    @Override
+    public void create(Game entity) {
+        super.create(entity);
     }
 
 }

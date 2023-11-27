@@ -26,12 +26,6 @@ public class Game implements Serializable {
 
     @Column(name = "imatge")
     private String pathImage;
-
-    
-    @ElementCollection
-    @CollectionTable(name = "stores", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "store")
-    private List<String> stores;
     
     
 
