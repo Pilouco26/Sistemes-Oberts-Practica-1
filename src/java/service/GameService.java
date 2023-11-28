@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
@@ -42,26 +43,27 @@ public class GameService extends AbstractFacade<Game> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/prova")
     public List<Game> findAlla() {
-      return findAll();
+        return findAll();
     }
 
     @GET
-    @Path("")
-    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") String console) {
+    @Path("/find-all-ordered-by-name")
+    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") @DefaultValue("") String console) {
         String queryString;
         Query query;
-        if (type == null) {
+        if (type.equals("")) {
 
-            queryString = "SELECT g FROM Game g WHERE g.type = :type AND g.console = :console ORDER BY g.name ASC";
-            query = em.createQuery(queryString, Game.class);
-            query.setParameter(
-                    "type", type);
-
-        } else if (console == null) {
             queryString = "SELECT g FROM Game g WHERE g.console = :console ORDER BY g.name ASC";
             query = em.createQuery(queryString, Game.class);
             query.setParameter(
                     "console", console);
+
+        } else if (console.equals("")) {
+
+            queryString = "SELECT g FROM Game g WHERE g.type = :type ORDER BY g.name ASC";
+            query = em.createQuery(queryString, Game.class);
+            query.setParameter(
+                    "type", type);
 
         } else {
             queryString = "SELECT g FROM Game g WHERE g.type = :type AND g.console = :console ORDER BY g.name ASC";
@@ -85,8 +87,7 @@ public class GameService extends AbstractFacade<Game> {
         game.setStock(10);
         game.setPathImage("/path/to/image");
         super.create(game);
-        
-        return Response.status(Response.Status.CREATED).build();
-    }
 
-}
+        return Response.status(Response.Status.CREATED).build();
+
+    }
