@@ -48,9 +48,10 @@ public class GameService extends AbstractFacade<Game> {
 
     @GET
     @Path("/find-all-ordered-by-name")
-    public List<Game> findAllOrderedByName(@QueryParam("type") String type, @QueryParam("console") @DefaultValue("") String console) {
+    public List<Game> findAllOrderedByName(@QueryParam("type") @DefaultValue("") String type, @QueryParam("console") @DefaultValue("") String console) {
         String queryString;
         Query query;
+        System.out.println("Consola: " + console);
         if (type.equals("")) {
 
             queryString = "SELECT g FROM Game g WHERE g.console = :console ORDER BY g.name ASC";
@@ -91,3 +92,4 @@ public class GameService extends AbstractFacade<Game> {
         return Response.status(Response.Status.CREATED).build();
 
     }
+}
