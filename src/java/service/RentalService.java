@@ -15,6 +15,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
 import jakarta.ws.rs.core.Response;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import model.entities.Game;
 import model.entities.Rental;
 
 @Stateless
@@ -32,8 +36,18 @@ public class RentalService extends AbstractFacade<Rental> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
-    
-    
-    
+
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response crear(Game entity) {
+        Rental rental = new Rental();
+        rental.setPrice(50);
+        rental.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        rental.setGame(new Game());
+        super.create(rental);
+
+        return Response.status(Response.Status.CREATED).build();
+
+    }
+
 }

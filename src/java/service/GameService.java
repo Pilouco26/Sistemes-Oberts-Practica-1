@@ -21,6 +21,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import model.entities.Comment;
+import model.entities.Customer;
 import model.entities.Game;
 
 @Stateless
@@ -45,7 +46,14 @@ public class GameService extends AbstractFacade<Game> {
     public List<Game> findAlla() {
         return findAll();
     }
-
+    
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Game findById(@PathParam("id") int id) {
+        return em.find(Game.class, id);
+    }
+    
     @GET
     @Path("/find-all-ordered-by-name")
     public List<Game> findAllOrderedByName(@QueryParam("type") @DefaultValue("") String type, @QueryParam("console") @DefaultValue("") String console) {

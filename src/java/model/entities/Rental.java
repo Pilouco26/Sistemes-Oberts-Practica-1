@@ -1,9 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.entities;
 
+import java.io.Serializable;
+import java.util.Date; // Import Date class for the 'data' attribute
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,19 +12,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
-/**
- *
- * @author mlopes
- */
 @XmlRootElement
 @Entity
 @Table(name = "Rental")
-public class Rental implements Serializable{
+public class Rental implements Serializable {
 
     @Id
     private Long id;
+
+    @Column(name = "price")
+    private int price;
+
+    @Column(name = "date")
+    private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "idGame", referencedColumnName = "id")
+    private Game game;
 
     public Long getId() {
         return id;
@@ -34,11 +38,23 @@ public class Rental implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
-    
-    @ManyToOne
-    @JoinColumn(name= "idGame", referencedColumnName = "id")
-    private Game game;
-    
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date data) {
+        this.date = data;
+    }
+
     public Game getGame() {
         return game;
     }
@@ -46,4 +62,5 @@ public class Rental implements Serializable{
     public void setGame(Game game) {
         this.game = game;
     }
+
 }
