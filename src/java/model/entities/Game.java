@@ -16,11 +16,8 @@ import java.util.List;
 @Table(name = "Game")
 public class Game implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @SequenceGenerator(name = "Game_Gen", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Game_Gen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")

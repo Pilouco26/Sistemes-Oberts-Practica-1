@@ -14,6 +14,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.persistence.Query;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
@@ -22,7 +26,7 @@ import model.entities.Customer;
 import model.entities.Game;
 
 @Stateless
-@Path("costumer")
+@Path("customer")
 public class CostumerService extends AbstractFacade<Customer> {
 
     @PersistenceContext(unitName = "Homework1PU")
@@ -38,17 +42,50 @@ public class CostumerService extends AbstractFacade<Customer> {
     }
 
     @GET
-    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Customer> findAll() {
-        return super.findAll();
+    public Response findAllCustomers() {
+        List<Customer> customers = super.findAll();
+
+        // Convert the list of customers to a JSON array
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for (Customer customer : customers) {
+            jsonArrayBuilder.add(
+                    Json.createObjectBuilder()
+                            .add("id", customer.getId())
+                            .add("name", customer.getName())
+                            .add("email", customer.getEmail())
+                            .build()
+            );
+        }
+        JsonArray jsonArray = jsonArrayBuilder.build();
+
+        // Create a JSON response with the customer data
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("customers", jsonArray)
+                .build();
+
+        // Return the JSON response
+        return Response.status(Response.Status.OK)
+                .entity(jsonResponse.toString())
+                .build();
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Customer findById(@PathParam("id") int id) {
-        return em.find(Customer.class, id);
+    public Response findById(@PathParam("id") Long id) {
+        Customer customer = em.find(Customer.class, id);
+
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("status", "success")
+                .add("code", Response.Status.OK.getStatusCode())
+                .add("name", customer.getName())
+                .add("email", customer.getEmail())
+                .build();
+
+        return Response.status(Response.Status.OK)
+                .entity(jsonResponse.toString())
+                .build();
     }
 
     @PUT

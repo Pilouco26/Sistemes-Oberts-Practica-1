@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4d96a302-1d3d-4d21-a187-c3fd46050e3b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Costumer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Costumer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Game.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Rental.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/model/entities/Rental.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/resouces.res" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/AbstractFacade.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/AbstractFacade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/CostumerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/CostumerService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/GameService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/GameService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/RESTapp.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/RESTapp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/RentalService.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/WEB-INF/classes/service/RentalService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/gfv610ee9.dpf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/web/install_1.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/install_1.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/conf/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/conf/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/java/model/entities/Costumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/entities/Costumer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/model/entities/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/entities/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/model/entities/Rental.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/model/entities/Rental.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/service/AbstractFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/service/AbstractFacade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/service/CostumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/service/CostumerService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/java/service/GameService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/service/GameService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/service/RESTapp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/service/RESTapp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/service/RentalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/service/RentalService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/install_1.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/web/install_1.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,9 +34,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2YlYDGJy2pm8OS1r0nONeYvLReG" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -41,6 +49,10 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "miguel",
     "last_opened_file_path": "C:/Users/mlope/Desktop/Homework1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -53,6 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1701101511214</updated>
       <workItem from="1701101512261" duration="23000" />
+      <workItem from="1701272047025" duration="594000" />
     </task>
     <servers />
   </component>

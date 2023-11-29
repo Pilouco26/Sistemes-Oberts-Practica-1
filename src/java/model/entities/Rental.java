@@ -1,5 +1,6 @@
 package model.entities;
 
+import jakarta.persistence.CascadeType;
 import java.io.Serializable;
 import java.util.Date; // Import Date class for the 'data' attribute
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Rental implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "price")
@@ -27,7 +29,7 @@ public class Rental implements Serializable {
     @Column(name = "date")
     private Date date;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idGame", referencedColumnName = "id")
     private Game game;
 

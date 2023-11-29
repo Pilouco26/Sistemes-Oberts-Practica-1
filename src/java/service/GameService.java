@@ -20,6 +20,8 @@ import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import model.entities.Comment;
 import model.entities.Customer;
 import model.entities.Game;
@@ -43,61 +45,92 @@ public class GameService extends AbstractFacade<Game> {
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/prova")
-    public List<Game> findAlla() {
-        return findAll();
+    public Response findAlla() {
+        List<Game> games = findAll();
+        return Response.ok(games).build();
     }
-    
+
     @GET
-    @Path("{id}")
+    @Path("/get")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Game findById(@PathParam("id") int id) {
+    public Game findById(@QueryParam("id") Long id) {
         return em.find(Game.class, id);
     }
-    
+
     @GET
     @Path("/find-all-ordered-by-name")
-    public List<Game> findAllOrderedByName(@QueryParam("type") @DefaultValue("") String type, @QueryParam("console") @DefaultValue("") String console) {
+    public Response findAllOrderedByName(
+            @QueryParam("type") @DefaultValue("") String type,
+            @QueryParam("console") @DefaultValue("") String console
+    ) {
+        if (type.equals("") && console.equals("")) {
+            // Both parameters are missing or empty
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Parameters are not correct.")
+                    .build();
+        }
+
         String queryString;
         Query query;
-        System.out.println("Consola: " + console);
-        if (type.equals("")) {
 
+        if (type.equals("")) {
             queryString = "SELECT g FROM Game g WHERE g.console = :console ORDER BY g.name ASC";
             query = em.createQuery(queryString, Game.class);
-            query.setParameter(
-                    "console", console);
-
+            query.setParameter("console", console);
         } else if (console.equals("")) {
-
             queryString = "SELECT g FROM Game g WHERE g.type = :type ORDER BY g.name ASC";
             query = em.createQuery(queryString, Game.class);
-            query.setParameter(
-                    "type", type);
-
+            query.setParameter("type", type);
         } else {
             queryString = "SELECT g FROM Game g WHERE g.type = :type AND g.console = :console ORDER BY g.name ASC";
             query = em.createQuery(queryString, Game.class);
-            query.setParameter(
-                    "type", type);
-            query.setParameter(
-                    "console", console);
-
+            query.setParameter("type", type);
+            query.setParameter("console", console);
         }
-        return query.getResultList();
+
+        List<Game> resultList = query.getResultList();
+        return Response.ok(resultList).build();
     }
 
     @POST
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response crear(Game entity) {
-        Game game = new Game();
-        game.setName("Example Game");
-        game.setType("Action");
-        game.setConsole("PlayStation");
-        game.setStock(10);
-        game.setPathImage("/path/to/image");
-        super.create(game);
 
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            // Check if entity name already exists in the database
+            String queryString;
+            Query query;
+            queryString = "SELECT g FROM Game g WHERE g.name = :name";
+            query = em.createQuery(queryString, Game.class);
+            query.setParameter("name", entity.getName());
+            List<Game> resultList = query.getResultList();
+            if (!resultList.isEmpty()) {
+                throw new Exception("Entity with name '" + entity.getName() + "' already exists");
+            }
 
+            // Try to create the entity
+            super.create(entity);
+
+            // If successful, return a 201 response with a success message
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("status", "success");
+            responseMap.put("code", Response.Status.CREATED.getStatusCode());
+            responseMap.put("message", "Entity created successfully");
+
+            return Response.status(Response.Status.CREATED)
+                    .entity(responseMap)
+                    .build();
+        } catch (Exception e) {
+            // If an exception occurs (e.g., entity already exists), return a 409 response with an error message
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("status", "error");
+            responseMap.put("code", Response.Status.CONFLICT.getStatusCode());
+            responseMap.put("message", e.getMessage());
+
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(responseMap)
+                    .build();
+        }
     }
+
 }

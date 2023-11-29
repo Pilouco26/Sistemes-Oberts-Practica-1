@@ -14,10 +14,14 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Random;
 import model.entities.Game;
 import model.entities.Rental;
 
@@ -37,16 +41,39 @@ public class RentalService extends AbstractFacade<Rental> {
         return em;
     }
 
+    @GET
+    @Path("/get")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Rental findById(@QueryParam("id") Long id) {
+        return em.find(Rental.class, id);
+    }
+
     @POST
     @Produces({MediaType.APPLICATION_JSON})
-    public Response crear(Game entity) {
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response crear(Game game) {
         Rental rental = new Rental();
-        rental.setPrice(50);
+        rental.setPrice(new Random().nextInt(61) + 20);
         rental.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        rental.setGame(new Game());
+        rental.setGame(game);
+        Long id = game.getId();
         super.create(rental);
+        String message = "Rental uploaded!" ;
 
-        return Response.status(Response.Status.CREATED).build();
+        // Build the JSON response with the custom message
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("status", "success")
+                .add("code", Response.Status.CREATED.getStatusCode())
+                .add("message", message)
+                .add("id", ""+id)
+                .add("name", game.getName())
+                .add("price", rental.getPrice())
+                .build();
+
+        // Return the JSON response with status code 201
+        return Response.status(Response.Status.CREATED)
+                .entity(jsonResponse.toString())
+                .build();
 
     }
 
