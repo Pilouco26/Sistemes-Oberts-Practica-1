@@ -1,24 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.List;
 
-/**
- *
- * @author mlopes
- */
 @Entity
 @Table(name = "Customer")
 @XmlRootElement
@@ -37,6 +33,9 @@ public class Customer implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private List<Rental> rentals;
+
     public Long getId() {
         return id;
     }
@@ -53,12 +52,12 @@ public class Customer implements Serializable {
         this.name = name;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -67,5 +66,13 @@ public class Customer implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public void setRentals(List<Rental> rentals) {
+        this.rentals = rentals;
     }
 }

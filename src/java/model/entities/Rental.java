@@ -33,6 +33,10 @@ public class Rental implements Serializable {
     @JoinColumn(name = "idGame", referencedColumnName = "id")
     private Game game;
 
+    @ManyToOne
+    @JoinColumn(name = "idCustomer")
+    private Customer customer;
+
     public Long getId() {
         return id;
     }
