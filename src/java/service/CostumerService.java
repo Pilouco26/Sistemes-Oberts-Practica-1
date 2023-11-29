@@ -42,7 +42,7 @@ public class CostumerService extends AbstractFacade<Customer> {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response findAllCustomers() {
         List<Customer> customers = super.findAll();
 
@@ -89,18 +89,25 @@ public class CostumerService extends AbstractFacade<Customer> {
     }
 
     @PUT
-    @Path("/prova/{id}")
+    @Path("/modifica/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON) // Add this line to specify the response media type
     public Response updateCostumer(@PathParam("id") Long id, Customer user) {
         Customer userToUpdate = em.find(Customer.class, id);
         if (userToUpdate == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        // Update customer information
         userToUpdate.setName(user.getName());
         userToUpdate.setEmail(user.getEmail());
         userToUpdate.setPassword(user.getPassword());
+
+        // Persist the updated customer
         em.persist(userToUpdate);
-        return Response.ok().build();
+
+        // Create a JSON response with the updated customer information
+        return Response.ok(userToUpdate).build();
     }
 
 }
