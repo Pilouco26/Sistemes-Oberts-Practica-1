@@ -33,8 +33,6 @@ public class Customer implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
-    private List<Rental> rentals;
 
     public Long getId() {
         return id;
@@ -66,13 +64,5 @@ public class Customer implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Rental> getRentals() {
-        return rentals;
-    }
-
-    public void setRentals(List<Rental> rentals) {
-        this.rentals = rentals;
     }
 }

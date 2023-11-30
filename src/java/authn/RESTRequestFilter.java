@@ -33,7 +33,7 @@ public class RESTRequestFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
 
     @PersistenceContext(unitName = "Homework1PU")
-    private EntityManager em;
+    protected EntityManager em;
 
     @Override
     public void filter(ContainerRequestContext requestCtx) throws IOException {
