@@ -1,16 +1,24 @@
 package model.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
-
+@XmlRootElement
 @Entity
 @Table(name = "Game")
 public class Game implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -24,16 +32,56 @@ public class Game implements Serializable {
     @Column(name = "stock")
     private int stock;
 
-    @Column(name = "imatge")
+    @Column(name = "pathImage")
     private String pathImage;
 
-    
-    @ElementCollection
-    @CollectionTable(name = "stores", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "store")
-    private List<String> stores;
-    
-    
+    // Getters
+    public Long getId() {
+        return id;
+    }
 
-    // getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getConsole() {
+        return console;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setConsole(String console) {
+        this.console = console;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
 }

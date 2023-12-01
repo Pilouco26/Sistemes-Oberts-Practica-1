@@ -13,4 +13,8 @@ import jakarta.inject.Qualifier;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface Secured {
+    
+    
+        
+    
 }

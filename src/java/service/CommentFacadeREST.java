@@ -47,7 +47,7 @@ public class CommentFacadeREST extends AbstractFacade<Comment> {
     public void remove(@PathParam("id") Long id) {
         super.remove(super.find(id));
     }
-    
+
     @GET
     @Secured
     @Path("{id}")
@@ -81,5 +81,5 @@ public class CommentFacadeREST extends AbstractFacade<Comment> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }
