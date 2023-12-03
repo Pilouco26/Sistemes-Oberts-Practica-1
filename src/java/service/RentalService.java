@@ -56,6 +56,8 @@ public class RentalService extends AbstractFacade<Rental> {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, Game game) {
+        
+        if(game == null) return Response.status(Response.Status.BAD_REQUEST).build();
         Authentication authentication = new Authentication();
         Rental rental = new Rental();
         rental.setPrice(new Random().nextInt(61) + 20);

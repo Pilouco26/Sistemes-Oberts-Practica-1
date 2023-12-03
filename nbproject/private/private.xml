@@ -5,13 +5,17 @@
         <group>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/RESTapp.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/CommentFacadeREST.java</file>
+            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/Secured.java</file>
+            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/Authentication.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/web/install.jsp</file>
+            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/Credentials.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/web/index.html</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/build.xml</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/RentalService.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Topic.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Comment.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/GameService.java</file>
+            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/RESTRequestFilter.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/conf/persistence.xml</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Game.java</file>
             <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/AbstractFacade.java</file>

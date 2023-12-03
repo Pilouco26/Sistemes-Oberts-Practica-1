@@ -43,7 +43,7 @@ public class GameService extends AbstractFacade<Game> {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({ MediaType.APPLICATION_JSON})
     @Path("/prova")
     public Response findAlla() {
         List<Game> games = findAll();
@@ -52,7 +52,7 @@ public class GameService extends AbstractFacade<Game> {
 
     @GET
     @Path("/get")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({ MediaType.APPLICATION_JSON})
     public Game findById(@QueryParam("id") Long id) {
         return em.find(Game.class, id);
     }
@@ -93,9 +93,9 @@ public class GameService extends AbstractFacade<Game> {
     }
 
     @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response crear(Game entity) {
-
+        if (entity==null) return Response.status(Response.Status.BAD_REQUEST).build(); 
         try {
             // Check if entity name already exists in the database
             String queryString;

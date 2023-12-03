@@ -5,12 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "Game")
@@ -34,6 +31,10 @@ public class Game implements Serializable {
 
     @Column(name = "pathImage")
     private String pathImage;
+    
+    @Column(name = "description")
+    private String description;
+
 
     // Getters
     public Long getId() {
