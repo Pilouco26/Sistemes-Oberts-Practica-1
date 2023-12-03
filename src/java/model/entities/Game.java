@@ -34,6 +34,9 @@ public class Game implements Serializable {
     
     @Column(name = "description")
     private String description;
+    
+    @Column(name = "address")
+    private String address;
 
 
     // Getters

@@ -55,7 +55,7 @@
                 + "(17,'Donald', 'donald@gmail.com', 'a231360'),"
                 + "(18,'Helen', 'helen@gmail.com', 'a231361'),"
                 + "(19,'Kenneth', 'kenneth@gmail.com', 'a231362'),"
-                + "(20,'admin', 'sob', 'sob')"
+                + "(20,'sob', 'sob', 'sob')"
             };
 
             for (String datum : data) {

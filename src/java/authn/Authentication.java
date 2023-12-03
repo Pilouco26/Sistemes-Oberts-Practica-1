@@ -28,7 +28,7 @@ public class Authentication extends RESTRequestFilter {
             return null;
         }
 
-        if (!customer.getPassword().equals(passwordToken)) {
+        if (!customer.getPassword().equals(passwordToken) || passwordToken == null) {
             // Password is incorrect
             return null;
         }

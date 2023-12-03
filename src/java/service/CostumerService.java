@@ -1,5 +1,6 @@
 package service;
 
+import authn.Authentication;
 import java.util.List;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -19,6 +20,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.persistence.Query;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import model.entities.Comment;
@@ -88,11 +90,19 @@ public class CostumerService extends AbstractFacade<Customer> {
                 .build();
     }
 
-    @PUT
+@PUT
     @Path("/modifica/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.APPLICATION_JSON) // Add this line to specify the response media type
-    public Response updateCostumer(@PathParam("id") Long id, Customer user) {
+    public Response updateCostumer(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, @PathParam("id") Long id, Customer user) {
+        
+        Authentication authentication = new Authentication();
+        Customer customer = authentication.check(mailtoken, passwordToken, em);
+        if (customer == null) {
+
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
         Customer userToUpdate = em.find(Customer.class, id);
         if (userToUpdate == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
