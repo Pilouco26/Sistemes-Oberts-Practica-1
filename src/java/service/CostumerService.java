@@ -77,6 +77,9 @@ public class CostumerService extends AbstractFacade<Customer> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response findById(@PathParam("id") Long id) {
         Customer customer = em.find(Customer.class, id);
+        if (customer == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")

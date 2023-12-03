@@ -15,6 +15,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.DefaultValue;
@@ -54,9 +56,24 @@ public class GameService extends AbstractFacade<Game> {
 
     @GET
     @Path("/get")
-    @Produces({ MediaType.APPLICATION_JSON})
-    public Game findById(@QueryParam("id") Long id) {
-        return em.find(Game.class, id);
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response findById(@QueryParam("id") Long id) {
+        Game game = em.find(Game.class, id);
+        if (game == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("status", "success")
+                .add("code", Response.Status.OK.getStatusCode())
+                .add("name", game.getName())
+                .add("type", game.getType())
+                .add("console", game.getConsole())
+                .add("stock", game.getStock())
+                .build();
+
+        return Response.status(Response.Status.OK)
+                .entity(jsonResponse.toString())
+                .build();
     }
 
     @GET
@@ -94,7 +111,7 @@ public class GameService extends AbstractFacade<Game> {
         return Response.ok(resultList).build();
     }
 
- @POST
+    @POST
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, Game entity) {
         
