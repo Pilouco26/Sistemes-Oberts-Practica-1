@@ -21,6 +21,7 @@ import jakarta.persistence.Query;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -45,11 +46,31 @@ public class RentalService extends AbstractFacade<Rental> {
         return em;
     }
 
-    @GET
+@GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public Rental findById(@QueryParam("id") Long id) {
-        return em.find(Rental.class, id);
+    public Response findById(@QueryParam("id") Long id, @HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken) {
+        Authentication authentication = new Authentication();
+        Customer customer = authentication.check(mailtoken, passwordToken, em);
+        if (customer == null) {
+
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        Rental rental = em.find(Rental.class, id);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        String data = dateFormat.format(rental.getDate());
+
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("id", "" + id)
+                .add("date", data)
+                .add("customer", rental.getCustomer().getName())
+                .add("game", rental.getGame().getName())
+                .add("price", rental.getPrice())
+                .build();
+
+        return Response.status(Response.Status.OK)
+                .entity(jsonResponse.toString())
+                .build();
     }
 
     @POST

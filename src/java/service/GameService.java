@@ -1,5 +1,6 @@
 package service;
 
+import authn.Authentication;
 import java.util.List;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -17,6 +18,7 @@ import authn.Secured;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
@@ -92,10 +94,17 @@ public class GameService extends AbstractFacade<Game> {
         return Response.ok(resultList).build();
     }
 
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response crear(Game entity) {
-        if (entity==null) return Response.status(Response.Status.BAD_REQUEST).build(); 
+ @POST
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, Game entity) {
+        
+        Authentication authentication = new Authentication();
+        Customer customer = authentication.check(mailtoken, passwordToken, em);
+        if (customer == null) {
+
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         try {
             // Check if entity name already exists in the database
             String queryString;
