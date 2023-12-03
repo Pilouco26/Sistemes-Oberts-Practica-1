@@ -76,7 +76,6 @@ public class RentalService extends AbstractFacade<Rental> {
     @POST
     @Path("/post")
     @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
     public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, @QueryParam("id") long id) {
         Authentication authentication = new Authentication();
         Customer customer = authentication.check(mailtoken, passwordToken, em);
