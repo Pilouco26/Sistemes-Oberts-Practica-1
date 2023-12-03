@@ -22,7 +22,7 @@ public class Authentication extends RESTRequestFilter {
         queryString = "SELECT g FROM Customer g WHERE g.email = :email";
         query = em.createQuery(queryString, Customer.class);
         query.setParameter("email", mailtoken);
-        Customer customer = (Customer) query.getResultList().get(0);
+        Customer customer = (Customer) query.getSingleResult();
         if (customer == null) {
             // Customer does not exist
             return null;

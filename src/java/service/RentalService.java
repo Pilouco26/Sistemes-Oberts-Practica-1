@@ -54,10 +54,14 @@ public class RentalService extends AbstractFacade<Rental> {
         Authentication authentication = new Authentication();
         Customer customer = authentication.check(mailtoken, passwordToken, em);
         if (customer == null) {
-
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+        
         Rental rental = em.find(Rental.class, id);
+        if (rental == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String data = dateFormat.format(rental.getDate());
 
@@ -75,32 +79,53 @@ public class RentalService extends AbstractFacade<Rental> {
     }
 
     @POST
+    @Path("/post")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, Game game) {
+    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, @QueryParam("id") long id) {
         Authentication authentication = new Authentication();
-        Rental rental = new Rental();
-        rental.setPrice(new Random().nextInt(61) + 20);
-        rental.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        rental.setGame(game);
         Customer customer = authentication.check(mailtoken, passwordToken, em);
         if (customer == null) {
 
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+        Game game = em.find(Game.class, id);
+        if (game == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        int stock = game.getStock();
+        if (stock == 0) {
+            return Response.status(Response.Status.GONE)
+                    .entity("Ho sentim, producte ja no està disponible.")
+                    .build();
+        }
+        
+        game.setStock(stock-1);
+        em.persist(game);
+  
+        Rental rental = new Rental();
+        rental.setPrice(new Random().nextInt(61) + 20);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate nextMonth = currentDate.plusMonths(1);
+        rental.setDate(Date.from(nextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        rental.setGame(game);
         rental.setCustomer(customer);
-        Long id = game.getId();
         super.create(rental);
         String message = "Rental uploaded!";
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        String data = dateFormat.format(rental.getDate());
+        
 
         // Build the JSON response with the custom message
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")
                 .add("code", Response.Status.CREATED.getStatusCode())
                 .add("message", message)
-                .add("id", "" + id)
-                .add("name", game.getName())
+                .add("id", "" + rental.getId())
+                .add("game", game.getName())
                 .add("price", rental.getPrice())
+                .add("date", data)
                 .build();
 
         // Return the JSON response with status code 201

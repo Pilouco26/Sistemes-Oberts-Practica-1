@@ -77,6 +77,9 @@ public class CostumerService extends AbstractFacade<Customer> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response findById(@PathParam("id") Long id) {
         Customer customer = em.find(Customer.class, id);
+        if (customer == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")
@@ -117,7 +120,16 @@ public class CostumerService extends AbstractFacade<Customer> {
         em.persist(userToUpdate);
 
         // Create a JSON response with the updated customer information
-        return Response.ok(userToUpdate).build();
+        JsonObject jsonResponse = Json.createObjectBuilder()
+                .add("status", "success")
+                .add("code", Response.Status.OK.getStatusCode())
+                .add("name", userToUpdate.getName())
+                .add("email", userToUpdate.getEmail())
+                .build();
+
+        return Response.status(Response.Status.OK)
+                .entity(jsonResponse.toString())
+                .build();
     }
 
 }
