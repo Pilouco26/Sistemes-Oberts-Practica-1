@@ -9,10 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -29,9 +31,9 @@ public class Rental implements Serializable {
     @Column(name = "date")
     private Date date;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idGame", referencedColumnName = "id")
-    private Game game;
+    private List<Game> game;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idCustomer")
@@ -61,11 +63,11 @@ public class Rental implements Serializable {
         this.date = data;
     }
 
-    public Game getGame() {
+    public List<Game> getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    public void setGame(List<Game> game) {
         this.game = game;
     }
      public Customer getCustomer() {

@@ -24,6 +24,7 @@ import jakarta.ws.rs.core.Response;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 import model.entities.Customer;
@@ -64,7 +65,6 @@ public class RentalService extends AbstractFacade<Rental> {
                 .add("id", "" + id)
                 .add("date", data)
                 .add("customer", rental.getCustomer().getName())
-                .add("game", rental.getGame().getName())
                 .add("price", rental.getPrice())
                 .build();
 
@@ -84,6 +84,8 @@ public class RentalService extends AbstractFacade<Rental> {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         Game game = em.find(Game.class, id);
+        List<Game> games = new ArrayList();
+        games.add(game);
         if (game == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -102,7 +104,7 @@ public class RentalService extends AbstractFacade<Rental> {
         LocalDate currentDate = LocalDate.now();
         LocalDate nextMonth = currentDate.plusMonths(1);
         rental.setDate(Date.from(nextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        rental.setGame(game);
+        rental.setGame(games);
         rental.setCustomer(customer);
         super.create(rental);
         String message = "Rental uploaded!";
@@ -120,51 +122,6 @@ public class RentalService extends AbstractFacade<Rental> {
                 .add("game", game.getName())
                 .add("price", rental.getPrice())
                 .add("date", data)
-                .build();
-
-        // Return the JSON response with status code 201
-        return Response.status(Response.Status.CREATED)
-                .entity(jsonResponse.toString())
-                .build();
-
-    }
-    
-    @POST
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, Game game) {
-        
-        if(game == null) return Response.status(Response.Status.BAD_REQUEST).build();
-        Authentication authentication = new Authentication();
-        Rental rental = new Rental();
-        rental.setPrice(new Random().nextInt(61) + 20);
-        rental.setDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        rental.setGame(game);
-        Customer customer = authentication.check(mailtoken, passwordToken, em);
-        if (customer == null) {
-
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        int stock = game.getStock();
-        if (stock == 0) {
-            return Response.status(Response.Status.GONE)
-                    .entity("Ho sentim, producte ja no estÃ  disponible.")
-                    .build();
-        }
-        game.setStock(stock-1);
-        rental.setCustomer(customer);
-        Long id = game.getId();
-        super.create(rental);
-        String message = "Rental uploaded!";
-
-        // Build the JSON response with the custom message
-        JsonObject jsonResponse = Json.createObjectBuilder()
-                .add("status", "success")
-                .add("code", Response.Status.CREATED.getStatusCode())
-                .add("message", message)
-                .add("id", "" + id)
-                .add("name", game.getName())
-                .add("price", rental.getPrice())
                 .build();
 
         // Return the JSON response with status code 201
