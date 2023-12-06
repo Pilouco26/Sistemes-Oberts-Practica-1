@@ -3,23 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/Secured.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/Authentication.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/web/install.jsp</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/build/web/index.html</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/web/index.html</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/build.xml</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/build/web/install.jsp</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/RentalService.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Topic.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/GameService.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/authn/RESTRequestFilter.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/conf/persistence.xml</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Game.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/conf/MANIFEST.MF</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/model/entities/Rental.java</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/web/install_1.jsp</file>
-            <file>file:/C:/Users/mlope/Desktop/Homework1/src/java/service/CostumerService.java</file>
+            <file>file:/C:/URV/Homework1/src/java/service/RentalService.java</file>
+            <file>file:/C:/URV/Homework1/src/java/service/IdListWrapper.java</file>
         </group>
     </open-files>
 </project-private>

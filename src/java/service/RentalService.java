@@ -30,6 +30,7 @@ import java.util.Random;
 import model.entities.Customer;
 import model.entities.Game;
 import model.entities.Rental;
+import jakarta.json.JsonArrayBuilder;
 
 @Stateless
 @Path("rental")
@@ -60,12 +61,23 @@ public class RentalService extends AbstractFacade<Rental> {
         Rental rental = em.find(Rental.class, id);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String data = dateFormat.format(rental.getDate());
+        
+        List<Game> games = rental.getGame();
+        int i = 0;
+        JsonArrayBuilder gamesJson = Json.createArrayBuilder();
+        int size = games.size();
+        while (i<size) {
+            Game game = games.get(i);
+            gamesJson.add(game.getName());
+            i++;
+        }
 
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("id", "" + id)
                 .add("date", data)
                 .add("customer", rental.getCustomer().getName())
                 .add("price", rental.getPrice())
+                .add("games", gamesJson)
                 .build();
 
         return Response.status(Response.Status.OK)
@@ -75,30 +87,50 @@ public class RentalService extends AbstractFacade<Rental> {
 
     @POST
     @Path("/post")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, @QueryParam("id") long id) {
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response crear(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken, IdListWrapper idListWrapper) {
+        
         Authentication authentication = new Authentication();
         Customer customer = authentication.check(mailtoken, passwordToken, em);
         if (customer == null) {
 
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        Game game = em.find(Game.class, id);
+        
+        List<Long> ids = idListWrapper.getIds();
+        int i = 0;
+        int size = ids.size();
         List<Game> games = new ArrayList();
-        games.add(game);
-        if (game == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        int stock = game.getStock();
-        if (stock == 0) {
-            return Response.status(Response.Status.GONE)
-                    .entity("Ho sentim, producte ja no estÃ  disponible.")
+        if (size == 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("No games selected")
                     .build();
         }
-        
-        game.setStock(stock-1);
-        em.persist(game);
-  
+        else while (i < size) {
+            Game game = em.find(Game.class, ids.get(i));
+            if (game == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Game " + ids.get(i) + " not found")
+                        .build();
+            }
+            else {
+                int stock = game.getStock();
+                if (stock == 0) {
+                    return Response.status(Response.Status.GONE)
+                            .entity("Game " + game.getName() + " is not available")
+                            .build();
+                }
+                else 
+                {
+                    games.add(game);
+                    game.setStock(stock - 1);
+                    em.persist(game);
+                }
+            }
+            i++;
+        }
+
         Rental rental = new Rental();
         rental.setPrice(new Random().nextInt(61) + 20);
         LocalDate currentDate = LocalDate.now();
@@ -111,17 +143,25 @@ public class RentalService extends AbstractFacade<Rental> {
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String data = dateFormat.format(rental.getDate());
+        JsonArrayBuilder gamesJson = Json.createArrayBuilder();
+        i = 0;
+        size = games.size();
+        while (i<size) {
+            Game game = games.get(i);
+            gamesJson.add(game.getName());
+            i++;
+        }
         
-
         // Build the JSON response with the custom message
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")
                 .add("code", Response.Status.CREATED.getStatusCode())
                 .add("message", message)
                 .add("id", "" + rental.getId())
-                .add("game", game.getName())
                 .add("price", rental.getPrice())
                 .add("date", data)
+                .add("customer", rental.getCustomer().getName())
+                .add("games", gamesJson)
                 .build();
 
         // Return the JSON response with status code 201
