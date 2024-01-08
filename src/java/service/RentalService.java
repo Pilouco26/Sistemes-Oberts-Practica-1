@@ -48,7 +48,7 @@ public class RentalService extends AbstractFacade<Rental> {
         return em;
     }
 
-@GET
+    @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findById(@QueryParam("id") Long id, @HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken) {

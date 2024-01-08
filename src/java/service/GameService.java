@@ -32,6 +32,7 @@ import model.entities.Game;
 
 @Stateless
 @Path("game")
+
 public class GameService extends AbstractFacade<Game> {
 
     @PersistenceContext(unitName = "Homework1PU")
@@ -50,10 +51,20 @@ public class GameService extends AbstractFacade<Game> {
     @Produces({ MediaType.APPLICATION_JSON})
     @Path("/prova")
     public Response findAlla() {
-        List<Game> games = findAll();
+        List<Game> games = findAllOrderedByName();
         return Response.ok(games).build();
     }
+    
+    private List<Game> findAllOrderedByName() {
+        // Assuming you have a method like findAll() in your data access layer
+        // Modify this method accordingly based on your data access mechanism
+        List<Game> games = findAll();
 
+        // Use Comparator to sort the list by name
+        games.sort(Comparator.comparing(Game::getName));
+
+        return games;
+    }
     @GET
     @Path("/get")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -69,6 +80,8 @@ public class GameService extends AbstractFacade<Game> {
                 .add("type", game.getType())
                 .add("console", game.getConsole())
                 .add("stock", game.getStock())
+                .add("price", game.getPrice())
+                .add("pathImage", game.getPathImage())
                 .build();
 
         return Response.status(Response.Status.OK)
@@ -77,16 +90,14 @@ public class GameService extends AbstractFacade<Game> {
     }
 
     @GET
-    @Path("/find-all-ordered-by-name")
+    @Path("/find")
     public Response findAllOrderedByName(
             @QueryParam("type") @DefaultValue("") String type,
             @QueryParam("console") @DefaultValue("") String console
     ) {
         if (type.equals("") && console.equals("")) {
             // Both parameters are missing or empty
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Parameters are not correct.")
-                    .build();
+            return findAlla();
         }
 
         String queryString;

@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+
 @XmlRootElement
 @Entity
 @Table(name = "Game")
@@ -31,13 +32,23 @@ public class Game implements Serializable {
 
     @Column(name = "pathImage")
     private String pathImage;
-    
+
     @Column(name = "description")
     private String description;
-    
+
+    @Column(name = "price")
+    private int price;
+
     @Column(name = "address")
     private String address;
 
+    public String getDescription() {
+        return description;
+    }
+    
+    public int getPrice() {
+        return price;
+    }
 
     // Getters
     public Long getId() {
