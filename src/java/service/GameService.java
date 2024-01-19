@@ -16,6 +16,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import authn.Secured;
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -29,6 +30,8 @@ import java.util.Map;
 import model.entities.Comment;
 import model.entities.Customer;
 import model.entities.Game;
+import model.entities.GameShop;
+import model.entities.Shop;
 
 @Stateless
 @Path("game")
@@ -73,6 +76,21 @@ public class GameService extends AbstractFacade<Game> {
         if (game == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        
+        // Obtener la lista de relaciones GameShop asociadas al juego
+        List<GameShop> gameShops = game.getShops();
+
+        // Crear un array JSON para almacenar las direcciones de las tiendas
+        JsonArrayBuilder shopAddressesArray = Json.createArrayBuilder();
+
+    // Iterar sobre la lista de relaciones y agregar las direcciones al array JSON
+        for (GameShop gameShop : gameShops) {
+        Shop shop = gameShop.getShop();
+        if (shop != null) {
+        shopAddressesArray.add(shop.getAddress());
+        }
+}
+        
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")
                 .add("code", Response.Status.OK.getStatusCode())
@@ -81,6 +99,8 @@ public class GameService extends AbstractFacade<Game> {
                 .add("console", game.getConsole())
                 .add("stock", game.getStock())
                 .add("price", game.getPrice())
+                .add("description", game.getDescription())
+                .add("addresses", shopAddressesArray)
                 .add("pathImage", game.getPathImage())
                 .build();
 

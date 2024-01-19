@@ -1,13 +1,16 @@
 package model.entities;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -39,16 +42,10 @@ public class Game implements Serializable {
     @Column(name = "price")
     private int price;
 
-    @Column(name = "address")
-    private String address;
+    @JsonbTransient
+    @OneToMany(mappedBy = "game")
+    private List<GameShop> shops;
 
-    public String getDescription() {
-        return description;
-    }
-    
-    public int getPrice() {
-        return price;
-    }
 
     // Getters
     public Long getId() {
@@ -63,6 +60,14 @@ public class Game implements Serializable {
         return type;
     }
 
+     public String getDescription() {
+        return description;
+    }
+    
+    public int getPrice() {
+        return price;
+    }
+    
     public String getConsole() {
         return console;
     }
@@ -73,6 +78,10 @@ public class Game implements Serializable {
 
     public String getPathImage() {
         return pathImage;
+    }
+    
+    public List<GameShop> getShops() {
+        return shops;
     }
 
     // Setters
@@ -98,5 +107,13 @@ public class Game implements Serializable {
 
     public void setPathImage(String pathImage) {
         this.pathImage = pathImage;
+    }
+    
+    public void setShops(List<GameShop> shops) {
+        this.shops = shops;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
