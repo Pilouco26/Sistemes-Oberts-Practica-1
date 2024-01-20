@@ -19,6 +19,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.QueryParam;
@@ -122,5 +123,32 @@ public class CostumerService extends AbstractFacade<Customer> {
         // Create a JSON response with the updated customer information
         return Response.ok(userToUpdate).build();
     }
+
+    @GET
+    @Path("/check")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkUserExistence(@HeaderParam("mailToken") String mailtoken, @HeaderParam("passwordToken") String passwordToken) {
+        try {
+            // Check if a user with the given email and password exists
+            Customer existingUser = em.createQuery(
+                    "SELECT c FROM Customer c WHERE c.email = :email AND c.password = :password", Customer.class)
+                    .setParameter("email", mailtoken)
+                    .setParameter("password", passwordToken)
+                    .getSingleResult();
+
+            // If a user exists, return a 400 Bad Request response
+            return Response.status(Response.Status.ACCEPTED)
+                    .entity("User with the provided email and password already exists.")
+                    .build();
+        } catch (NoResultException e) {
+           // If no user is found, return a 401 Unauthorized response
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("User with the provided email and password does not exist.")
+                    .build();
+        }
+    }
+    
+    
 
 }

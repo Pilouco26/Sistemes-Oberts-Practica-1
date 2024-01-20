@@ -31,6 +31,7 @@ import model.entities.Customer;
 import model.entities.Game;
 import model.entities.Rental;
 import jakarta.json.JsonArrayBuilder;
+import model.entities.GameShop;
 
 @Stateless
 @Path("rental")
@@ -62,12 +63,13 @@ public class RentalService extends AbstractFacade<Rental> {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String data = dateFormat.format(rental.getDate());
         
-        List<Game> games = rental.getGame();
+        List<GameShop> games = rental.getGames();
         int i = 0;
         JsonArrayBuilder gamesJson = Json.createArrayBuilder();
         int size = games.size();
         while (i<size) {
-            Game game = games.get(i);
+            GameShop gameShop = games.get(i);
+            Game game = gameShop.getGame();
             gamesJson.add(game.getName());
             i++;
         }
@@ -98,45 +100,56 @@ public class RentalService extends AbstractFacade<Rental> {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         
+        boolean ok = true;
         List<Long> ids = idListWrapper.getIds();
         int i = 0;
         int size = ids.size();
-        List<Game> games = new ArrayList();
         if (size == 0) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("No games selected")
                     .build();
         }
-        else while (i < size) {
-            Game game = em.find(Game.class, ids.get(i));
-            if (game == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Game " + ids.get(i) + " not found")
-                        .build();
-            }
-            else {
-                int stock = game.getStock();
-                if (stock == 0) {
-                    return Response.status(Response.Status.GONE)
-                            .entity("Game " + game.getName() + " is not available")
+        else {
+            while (i < size) {
+                GameShop gameShop = em.find(GameShop.class, ids.get(i));
+                if (gameShop == null) {
+                    return Response.status(Response.Status.NOT_FOUND)
+                            .entity("Game " + ids.get(i) + " not found")
                             .build();
                 }
-                else 
-                {
-                    games.add(game);
-                    game.setStock(stock - 1);
-                    em.persist(game);
+                else {
+                    int stock = gameShop.getStock();
+                    if (stock == 0) {
+                        return Response.status(Response.Status.GONE)
+                                .entity("Game " + gameShop.getGame().getName() + " is not available in" + gameShop.getShop().getAddress())
+                                .build();
+                    }
                 }
+                i++;
             }
-            i++;
         }
+            i = 0;
+            int price = 0;
+            List<GameShop> games = new ArrayList();
+            while (i < size) {
+                GameShop gameShop = em.find(GameShop.class, ids.get(i));
+                int stock = gameShop.getStock();
+                games.add(gameShop);
+                gameShop.setStock(stock - 1);
+                Game game = gameShop.getGame();
+                game.setStock(game.getStock()-1);
+                em.persist(gameShop);
+                em.persist(game);
+                price = price + game.getPrice();
+                i++;
+            }
 
         Rental rental = new Rental();
-        rental.setPrice(new Random().nextInt(61) + 20);
+        rental.setPrice(price);
         LocalDate currentDate = LocalDate.now();
         LocalDate nextMonth = currentDate.plusMonths(1);
         rental.setDate(Date.from(nextMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        rental.setGame(games);
+        rental.setGames(games);
         rental.setCustomer(customer);
         super.create(rental);
         String message = "Rental uploaded!";
@@ -144,11 +157,13 @@ public class RentalService extends AbstractFacade<Rental> {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String data = dateFormat.format(rental.getDate());
         JsonArrayBuilder gamesJson = Json.createArrayBuilder();
+        JsonArrayBuilder addresses = Json.createArrayBuilder();
         i = 0;
         size = games.size();
         while (i<size) {
-            Game game = games.get(i);
+            Game game = games.get(i).getGame();
             gamesJson.add(game.getName());
+            addresses.add(games.get(i).getShop().getAddress());
             i++;
         }
         
@@ -162,6 +177,7 @@ public class RentalService extends AbstractFacade<Rental> {
                 .add("date", data)
                 .add("customer", rental.getCustomer().getName())
                 .add("games", gamesJson)
+                .add("adresses", addresses)
                 .build();
 
         // Return the JSON response with status code 201

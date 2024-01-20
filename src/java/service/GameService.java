@@ -83,13 +83,13 @@ public class GameService extends AbstractFacade<Game> {
         // Crear un array JSON para almacenar las direcciones de las tiendas
         JsonArrayBuilder shopAddressesArray = Json.createArrayBuilder();
 
-    // Iterar sobre la lista de relaciones y agregar las direcciones al array JSON
+    // Iterar sobre la lista de relaciones y agregar las direcciones con stock
         for (GameShop gameShop : gameShops) {
-        Shop shop = gameShop.getShop();
-        if (shop != null) {
-        shopAddressesArray.add(shop.getAddress());
+            if (gameShop.getStock()>0) {
+                Shop shop = gameShop.getShop();
+                shopAddressesArray.add(shop.getAddress());
+            }
         }
-}
         
         JsonObject jsonResponse = Json.createObjectBuilder()
                 .add("status", "success")

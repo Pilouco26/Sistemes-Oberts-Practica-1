@@ -33,7 +33,7 @@ public class Rental implements Serializable {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idGame", referencedColumnName = "id")
-    private List<Game> game;
+    private List<GameShop> games;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "idCustomer")
@@ -63,12 +63,12 @@ public class Rental implements Serializable {
         this.date = data;
     }
 
-    public List<Game> getGame() {
-        return game;
+    public List<GameShop> getGames() {
+        return games;
     }
 
-    public void setGame(List<Game> game) {
-        this.game = game;
+    public void setGames(List<GameShop> games) {
+        this.games = games;
     }
      public Customer getCustomer() {
         return customer;
